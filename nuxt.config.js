@@ -1,14 +1,12 @@
 export default {
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
-  // ssr: false,
-  // server: {
-  //   host: '0' // default: localhost
-  // },
+  ssr: false,
+  server: {
+    host: '0.0.0.0', // default: localhost
+  },
 
-  
   generate: {
     fallback: true,
-
   },
 
   // Target: https://go.nuxtjs.dev/config-target
@@ -49,10 +47,16 @@ export default {
   ],
 
   proxy: {
-    "/api/": {
-      target: "https://api.mangadex.org/",
-      pathRewrite: { "^/api/": "" }
-    }
+    '/api/': {
+      target: 'https://api.mangadex.org/',
+      pathRewrite: { '^/api/': '' },
+      changeOrigin: true,
+    },
+    '/api2/': {
+      target: 'https://uploads.mangadex.org/',
+      pathRewrite: { '^/api2/': '' },
+      changeOrigin: true,
+    },
   },
 
   // PWA module configuration: https://go.nuxtjs.dev/pwa

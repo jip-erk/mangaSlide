@@ -5,7 +5,7 @@
       <div class="img-wrapper" @click="isActive = !isActive">
         <img
           :class="{ defuse: !isActive }"
-          :src="constant.posterUrl"
+          :src="'/api2/' + constant.posterUrl"
           alt="posterImg"
         />
         <div v-if="!isActive" class="descriptionCont">

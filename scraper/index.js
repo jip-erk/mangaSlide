@@ -7,7 +7,10 @@ export async function getDataFromURL(url) {
 
   while (!isValid && retryCount < 4) {
     // Get data
-    const dataReq = await fetch(url)
+    const dataReq = await fetch('/api/' + url, {
+      method: 'GET',
+      Headers: { 'Content-Type': 'application/json' },
+    })
     if (dataReq.status === 204) {
       // Empty result.
       // Just end the loop
