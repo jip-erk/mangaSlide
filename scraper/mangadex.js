@@ -34,7 +34,7 @@ export async function searchMangadex(page) {
   }`
   // mangadex excludetags
 
-  const pageReq = await fetch('/api/' + pageUrl, {
+  const pageReq = await fetch(pageUrl, {
     method: 'GET',
     Headers: { 'Content-Type': 'application/json' },
   })

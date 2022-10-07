@@ -7,7 +7,7 @@ export async function getDataFromURL(url) {
 
   while (!isValid && retryCount < 4) {
     // Get data
-    const dataReq = await fetch('/api/' + url, {
+    const dataReq = await fetch(url, {
       method: 'GET',
       Headers: { 'Content-Type': 'application/json' },
     })
