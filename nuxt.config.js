@@ -3,13 +3,14 @@ export default {
   ssr: false,
 
 
-  
+  target: 'static',
+
   generate: {
     fallback: true
   },
 
   // Target: https://go.nuxtjs.dev/config-target
-  target: 'static',
+ 
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
@@ -42,15 +43,15 @@ export default {
   modules: [
     // https://go.nuxtjs.dev/pwa
     '@nuxtjs/pwa',
-    '@nuxtjs/proxy',
+    // '@nuxtjs/proxy',
   ],
 
-  proxy: {
-    "/api/": {
-      target: "https://api.mangadex.org/",
-      pathRewrite: { "^/api/": "" }
-    }
-  },
+  // proxy: {
+  //   "/api/": {
+  //     target: "https://api.mangadex.org/",
+  //     pathRewrite: { "^/api/": "" }
+  //   }
+  // },
 
   // PWA module configuration: https://go.nuxtjs.dev/pwa
   pwa: {
