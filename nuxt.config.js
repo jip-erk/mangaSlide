@@ -2,6 +2,10 @@ export default {
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
   ssr: false,
 
+
+  
+
+
   // Target: https://go.nuxtjs.dev/config-target
   target: 'static',
 
@@ -36,7 +40,15 @@ export default {
   modules: [
     // https://go.nuxtjs.dev/pwa
     '@nuxtjs/pwa',
+    '@nuxtjs/proxy',
   ],
+
+  proxy: {
+    "/api/": {
+      target: "https://api.mangadex.org/",
+      pathRewrite: { "^/api/": "" }
+    }
+  },
 
   // PWA module configuration: https://go.nuxtjs.dev/pwa
   pwa: {
