@@ -3,7 +3,7 @@ import { getdbTags } from '../api/index'
 import { getDataFromURL } from './index.js'
 
 export async function getTags() {
-  const url = 'https://api.mangadex.org/manga/tag'
+  const url = '/api/https://api.mangadex.org/manga/tag'
   const data = await getDataFromURL(url)
   return data.data
 }
@@ -29,7 +29,7 @@ export async function searchMangadex(page) {
           .join('&excludedTags[]=')
       : ''
 
-  pageUrl = `https://api.mangadex.org/manga?order[rating]=desc&limit=1&offset=${page}${
+  pageUrl = `/api/https://api.mangadex.org/manga?order[rating]=desc&limit=1&offset=${page}${
     (includedTags, excludedTags)
   }`
   // mangadex excludetags
@@ -43,7 +43,7 @@ export async function searchMangadex(page) {
 export async function scrapeMangadex(slug, chapterId) {
   try {
     const originalData = await getDataFromURL(
-      `https://api.mangadex.org/manga/${slug}?includes[]=cover_art`
+      `/api/https://api.mangadex.org/manga/${slug}?includes[]=cover_art`
     )
     const data = originalData.data
 
@@ -82,7 +82,7 @@ export async function scrapeMangadex(slug, chapterId) {
     while (offset < total) {
       // Cycle through pagination
       const chapterData = await getDataFromURL(
-        `https://api.mangadex.org/manga/${slug}/feed?offset=${offset}&limit=500&translatedLanguage[]=en`
+        `/api/https://api.mangadex.org/manga/${slug}/feed?offset=${offset}&limit=500&translatedLanguage[]=en`
       )
       const mdChapters = (chapterData.data ? chapterData.data : []).filter(
         Boolean
@@ -155,7 +155,7 @@ export async function scrapeMangadex(slug, chapterId) {
       const chapter = allChapters.find((c) => c.id === chapterId)
       if (chapter) {
         const atHome = await getDataFromURL(
-          `https://api.mangadex.org/at-home/server/${chapter.id}`
+          `/api/https://api.mangadex.org/at-home/server/${chapter.id}`
         )
         const { baseUrl } = atHome
         chapterImages = atHome.chapter.data.map(
