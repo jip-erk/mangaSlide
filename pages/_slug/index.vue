@@ -3,14 +3,21 @@
     <NuxtLink style="text-decoration: none" to="/">
       <h1 style="margin-left: 20px">⏪</h1>
     </NuxtLink>
-    <div v-for="chapter in allChapters" :key="chapter.id" class="chapterList">
-      <NuxtLink :to="id + '/' + chapter.id">
-        <div>
-          <p>{{ chapter.attributes.title }}</p>
+    <div
+      v-for="chapter in allChapters"
+      :key="chapter.id"
+      class="chapterList"
+      @click="
+        () => {
+          $router.push({ path: id + '/' + chapter.id })
+        }
+      "
+    >
+      <div>
+        <p>{{ chapter.attributes.title }}</p>
 
-          <p>{{ chapter.attributes.publishAt.split('T')[0] }}</p>
-        </div>
-      </NuxtLink>
+        <p>{{ chapter.attributes.publishAt.split('T')[0] }}</p>
+      </div>
       <div>#{{ chapter.attributes.chapter }}</div>
     </div>
   </div>
