@@ -31,7 +31,7 @@ export async function searchMangadex(page) {
 
   pageUrl = `https://api.mangadex.org/manga?order[rating]=desc&limit=1&offset=${page}${
     (includedTags, excludedTags)
-  }`
+  }&contentRating[]=suggestive`
   // mangadex excludetags
 
   const pageReq = await fetch('/api/' + pageUrl)

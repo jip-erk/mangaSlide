@@ -21,7 +21,12 @@
     </div>
 
     <div class="uiCont">
-      <h2>{{ constant.title }}</h2>
+      <h2>
+        {{ constant.title }}
+        <NuxtLink style="text-decoration: none; float: right" to="/mangatags"
+          >⚙️</NuxtLink
+        >
+      </h2>
       <p>Chapters: {{ chapterLength }}</p>
 
       <div class="buttonCont">
@@ -78,6 +83,7 @@ export default {
     ...mapGetters({
       getPage: ['notes/getCurrentPage'],
       loading: ['notes/getLoading'],
+      getMangaList: ['notes/getMangas'],
     }),
   },
   mounted() {
@@ -89,6 +95,8 @@ export default {
       'createManga',
       'setCurrentPage',
       'getCurrentPage',
+      'getMangas',
+      'checkIfMangaExists',
     ]),
     updateTest() {
       this.updateManga(this.constant)
@@ -105,8 +113,10 @@ export default {
 
         searchMangadex(this.page).then((res) => {
           scrapeMangadex(res).then((res) => {
-            this.constant = res.constant
-            this.chapterLength = res.data.allChapters.length
+            this.getMangas().then(() => {
+              this.constant = res.constant
+              this.chapterLength = res.data.allChapters.length
+            })
           })
         })
       })
@@ -198,6 +208,7 @@ export default {
       img {
         width: auto;
         max-width: 100%;
+        max-height: 400px;
       }
 
       .defuse {

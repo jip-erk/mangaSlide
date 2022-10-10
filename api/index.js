@@ -118,3 +118,29 @@ export const updateCurrentChapter = async (data) => {
     console.log(err)
   }
 }
+
+export const getMangas = async () => {
+  try {
+    const getMangas = await client.query(
+      q.Map(
+        q.Paginate(q.Documents(q.Collection('mangas'))),
+        q.Lambda('X', q.Get(q.Var('X')))
+      )
+    )
+    return getMangas
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+// see if slig exists in collection mangas and return true or false
+export const checkIfMangaExists = async (slug) => {
+  try {
+    const checkIfMangaExists = await client.query(
+      q.Exists(q.Match(q.Index('mangas_by_slug'), slug))
+    )
+    return checkIfMangaExists
+  } catch (err) {
+    console.log(err)
+  }
+}

@@ -9,12 +9,15 @@ import {
   setCurrentPage,
   getCurrentPage,
   updateCurrentChapter,
+  getMangas,
+  checkIfMangaExists,
 } from '../api/index'
 
 export const state = () => ({
   loading: false,
   tags: null,
   currentPage: 0,
+  mangas: null,
 })
 
 export const mutations = {
@@ -26,6 +29,9 @@ export const mutations = {
   },
   GetCurrentPage(state, data) {
     state.currentPage = data
+  },
+  getMangas(state, data) {
+    state.mangas = data
   },
 }
 
@@ -58,6 +64,17 @@ export const actions = {
       await updateManga(slug)
     } catch (err) {
       console.log('store error updateManga', err)
+    } finally {
+      context.commit('SET_LOADING', false)
+    }
+  },
+
+  async checkIfMangaExists(context, slug) {
+    context.commit('SET_LOADING', true)
+    try {
+      await checkIfMangaExists(slug)
+    } catch (err) {
+      console.log('store error checkIfMangaExists', err)
     } finally {
       context.commit('SET_LOADING', false)
     }
@@ -99,6 +116,18 @@ export const actions = {
     }
   },
 
+  async getMangas(context) {
+    context.commit('SET_LOADING', true)
+    try {
+      const mangas = await getMangas()
+      context.commit('getMangas', mangas)
+    } catch (err) {
+      console.log('store error getMangas', err)
+    } finally {
+      context.commit('SET_LOADING', false)
+    }
+  },
+
   async createManga(context, data) {
     context.commit('SET_LOADING', true)
     try {
@@ -126,6 +155,7 @@ export const getters = {
   getLoading: (state) => state.loading,
   getTags: (state) => state.tags,
   getCurrentPage: (state) => state.currentPage,
+  getMangas: (state) => state.mangas,
 }
 
 export default {

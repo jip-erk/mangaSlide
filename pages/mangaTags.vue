@@ -1,5 +1,8 @@
 <template>
   <div>
+    <NuxtLink style="text-decoration: none" to="/">
+      <h1 style="margin-left: 20px">⏪</h1>
+    </NuxtLink>
     <div v-for="tag in tags" :key="tag.id" class="container">
       <div
         v-if="getAllTags?.data?.included_tags.some((e) => e.id === tag.id)"
@@ -18,13 +21,13 @@
       <div v-else class="adding">
         <div>
           <button @click="includedTag(tag.attributes.name.en, tag.id)">
-            -
+            ➖
           </button>
         </div>
         <div>{{ tag.attributes.name.en }}</div>
         <div>
           <button @click="excludedTag(tag.attributes.name.en, tag.id)">
-            +
+            ➕
           </button>
         </div>
       </div>
