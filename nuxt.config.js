@@ -2,9 +2,9 @@ export default {
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
   // ssr: false,
 
-  server: {
-    host: '0.0.0.0', // default: localhost
-  },
+  // server: {
+  //   host: '0.0.0.0', // default: localhost
+  // },
 
   generate: {
     fallback: true,
@@ -70,5 +70,7 @@ export default {
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},
 
-  serverMiddleware: ['~/serverMiddleware/index.js'],
+  serverMiddleware: [
+    { path: '/proxy-image', handler: '~/serverMiddleware/index.js' },
+  ],
 }

@@ -1,7 +1,7 @@
 const app = require('express')()
 const fetch = require('node-fetch-extra')
 
-app.get('/proxy-image', (req, res) => {
+app.get('/', (req, res) => {
   const url = decodeURIComponent(req.query.url.toString())
 
   res.setHeader(
