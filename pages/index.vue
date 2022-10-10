@@ -5,7 +5,7 @@
       <div class="img-wrapper" @click="isActive = !isActive">
         <img
           :class="{ defuse: !isActive }"
-          :src="'/api2/' + constant.posterUrl"
+          :src="constant.posterUrl"
           alt="posterImg"
         />
         <div v-if="!isActive" class="descriptionCont">
@@ -48,6 +48,7 @@
           @click="
             () => {
               addManga('read')
+              setPage()
               $router.push({ path: constant.slug })
             }
           "
@@ -105,7 +106,6 @@ export default {
         searchMangadex(this.page).then((res) => {
           scrapeMangadex(res).then((res) => {
             this.constant = res.constant
-
             this.chapterLength = res.data.allChapters.length
           })
         })

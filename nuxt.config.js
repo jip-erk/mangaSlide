@@ -53,7 +53,7 @@ export default {
       pathRewrite: { '^/api/': '' },
       changeOrigin: true,
     },
-    '/api2/': {
+    '/proxy-image/': {
       target: 'https://uploads.mangadex.org/',
       pathRewrite: { '^/api2/': '' },
       changeOrigin: true,
@@ -69,4 +69,8 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},
+
+  serverMiddleware: [
+    { path: '/proxy-image', handler: '~/serverMiddleware/index.js' },
+  ],
 }

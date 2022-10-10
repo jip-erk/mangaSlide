@@ -13,9 +13,8 @@
           }}
         </span>
         <div v-else>
-          <button>previeus</button>
-          {{ `${currentImage} of ${chapterImages.length}` }}
-          <button>next</button>
+          <button>list</button>
+          <NuxtLink to="/"> <button>home</button></NuxtLink>
         </div>
       </Transition>
     </div>
@@ -31,11 +30,19 @@
         </div>
       </div>
       <div v-for="img in chapterImages" :key="img" class="img-cont">
-        <img :src="img" alt="chapterImage" @load="loaded()" />
+        <img
+          :src="'/proxy-image?url=' + img"
+          alt="chapterImage"
+          @load="loaded()"
+        />
       </div>
-      <div>
-        <NuxtLink v-if="prevChapterId" :to="prevChapterId"> prev </NuxtLink>
-        <NuxtLink v-if="nextChapterId" :to="nextChapterId"> next </NuxtLink>
+      <div class="navContainer">
+        <NuxtLink v-if="prevChapterId" :to="prevChapterId">
+          <button>prev</button>
+        </NuxtLink>
+        <NuxtLink v-if="nextChapterId" :to="nextChapterId">
+          <button>next</button>
+        </NuxtLink>
       </div>
     </div>
   </div>
@@ -82,10 +89,8 @@ export default {
             this.nextChapterId = sort[i + 1].id
           }
           this.currentChapter = sort[i]
-          console.log(this.currentChapter)
         }
       }
-      console.log(this.nextChapterId, 'tes', this.prevChapterId)
     })
   },
   methods: {
@@ -101,6 +106,22 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.navContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  p {
+    margin: 0;
+  }
+  button {
+    background-color: #6d7179;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
+}
 .v-enter-active,
 .v-leave-active {
   transition: opacity 0.5s ease;
@@ -133,6 +154,14 @@ export default {
   color: white;
   animation-name: menu;
   animation-duration: 0.2s;
+
+  button {
+    background-color: #6d7179;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
 }
 
 @keyframes menu {
