@@ -53,11 +53,11 @@ export default {
       pathRewrite: { '^/api/': '' },
       changeOrigin: true,
     },
-    '/proxy-image/': {
-      target: 'https://uploads.mangadex.org/',
-      pathRewrite: { '^/api2/': '' },
-      changeOrigin: true,
-    },
+    // '/proxy-image/': {
+    //   target: 'https://uploads.mangadex.org/',
+    //   pathRewrite: { '^/api2/': '' },
+    //   changeOrigin: true,
+    // },
   },
 
   // PWA module configuration: https://go.nuxtjs.dev/pwa
