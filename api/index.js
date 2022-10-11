@@ -26,6 +26,19 @@ export const excludedTags = async (data) => {
   }
 }
 
+export const contentRating = async (data) => {
+  try {
+    const contentRating = await client.query(
+      q.Update(q.Ref(q.Collection('manga-app'), '344368514501443789'), {
+        data: { content_rating: data },
+      })
+    )
+    return contentRating
+  } catch (err) {
+    console.log(err)
+  }
+}
+
 export const updateManga = async (Slug, Status, Id) => {
   try {
     // in data to mangas array add slug and status of manga

@@ -1,6 +1,10 @@
 <template>
   <div v-if="constant" class="column">
     <div v-if="loading" class="loader">loading</div>
+    <div class="nav">
+      <NuxtLink to="/mangalist">📋</NuxtLink>
+      <NuxtLink to="/mangatags">🏷️</NuxtLink>
+    </div>
     <div class="ImgContainer">
       <div class="img-wrapper" @click="isActive = !isActive">
         <img
@@ -23,9 +27,6 @@
     <div class="uiCont">
       <h2>
         {{ constant.title }}
-        <NuxtLink style="text-decoration: none; float: right" to="/mangatags"
-          >⚙️</NuxtLink
-        >
       </h2>
       <p>Chapters: {{ chapterLength }}</p>
 
@@ -76,7 +77,8 @@ export default {
       constant: null,
       isActive: true,
       chapterLength: 0,
-      page: null,
+      page: 0,
+      localMangaList: [],
     }
   },
   computed: {
@@ -87,7 +89,15 @@ export default {
     }),
   },
   mounted() {
-    this.updatePage()
+    console.log('mounted')
+
+    this.getMangas().then(() => {
+      const data = { ...this.getMangaList.data }
+      for (const item in data) {
+        this.localMangaList.push(data[item].data)
+      }
+      this.updatePage()
+    })
   },
   methods: {
     ...mapActions('notes', [
@@ -103,30 +113,44 @@ export default {
     },
     setPage() {
       this.page++
-      this.setCurrentPage(this.page).then(() => {
-        this.updatePage()
-      })
+      this.updatePage()
+      // this.setCurrentPage(this.page).then(() => {
+      //   this.updatePage()
+      // })
     },
     updatePage() {
-      this.getCurrentPage().then(() => {
-        this.page = this.getPage.data.currentPage
+      // this.getCurrentPage().then(() => {
+      //   this.page = this.getPage.data.currentPage
+      searchMangadex(this.page).then((res) => {
+        scrapeMangadex(res).then(async (res) => {
+          // if localMangaList contains object with data.slug same as res.cosntant.slug
+          // then set constant to null
 
-        searchMangadex(this.page).then((res) => {
-          scrapeMangadex(res).then((res) => {
-            this.getMangas().then(() => {
+          for (const item in this.localMangaList) {
+            if (this.localMangaList[item].slug === (await res.constant.slug)) {
+              this.constant = null
+              console.log('slug already exists')
+              this.setPage()
+            } else {
               this.constant = res.constant
               this.chapterLength = res.data.allChapters.length
-            })
-          })
+            }
+          }
         })
       })
+      // })
     },
     addManga(Status) {
       const data = {
         slug: this.constant.slug,
         status: Status,
-        currentChapter: '',
+        name: this.constant.title,
+        posterUrl: this.constant.posterUrl,
+        chapters: this.chapterLength,
+        progress: [],
       }
+      // add data to this.localMangaList
+      this.localMangaList.push(data)
       this.createManga(data)
     },
   },
@@ -134,6 +158,18 @@ export default {
 </script>
 
 <style lang="scss">
+.nav {
+  display: flex;
+  justify-content: flex-end;
+  font-size: 2rem;
+  padding: 0.5rem;
+
+  a {
+    text-decoration: none;
+    float: right;
+    margin-left: 10px;
+  }
+}
 .column {
   .loader {
     position: fixed;
@@ -146,7 +182,7 @@ export default {
   }
   .uiCont {
     display: flex;
-    padding: 0 20px;
+    padding: 20px;
     flex-direction: column;
 
     h2 {
@@ -198,7 +234,7 @@ export default {
   }
   .ImgContainer {
     display: flex;
-    padding: 20px;
+    padding: 0 20px;
     justify-content: center;
     align-items: center;
     position: relative;

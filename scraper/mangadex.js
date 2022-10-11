@@ -29,14 +29,15 @@ export async function searchMangadex(page) {
           .join('&excludedTags[]=')
       : ''
 
+  const contentRating = tags.data.content_rating
+
   pageUrl = `https://api.mangadex.org/manga?order[rating]=desc&limit=1&offset=${page}${
     (includedTags, excludedTags)
-  }&contentRating[]=suggestive`
+  }&contentRating[]=${contentRating}`
   // mangadex excludetags
 
   const pageReq = await fetch('/api/' + pageUrl)
   const data = await pageReq.json()
-
   return data.data[0].id
 }
 
@@ -82,7 +83,7 @@ export async function scrapeMangadex(slug, chapterId) {
     while (offset < total) {
       // Cycle through pagination
       const chapterData = await getDataFromURL(
-        `https://api.mangadex.org/manga/${slug}/feed?offset=${offset}&limit=500&translatedLanguage[]=en`
+        `https://api.mangadex.org/manga/${slug}/feed?offset=${offset}&limit=500&translatedLanguage[]=en&contentRating[]=pornographic&contentRating[]=suggestive&contentRating[]=erotica&contentRating[]=safe`
       )
       const mdChapters = (chapterData.data ? chapterData.data : []).filter(
         Boolean

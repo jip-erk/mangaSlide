@@ -11,6 +11,7 @@ import {
   updateCurrentChapter,
   getMangas,
   checkIfMangaExists,
+  contentRating,
 } from '../api/index'
 
 export const state = () => ({
@@ -123,6 +124,17 @@ export const actions = {
       context.commit('getMangas', mangas)
     } catch (err) {
       console.log('store error getMangas', err)
+    } finally {
+      context.commit('SET_LOADING', false)
+    }
+  },
+
+  async contentRating(context, data) {
+    context.commit('SET_LOADING', true)
+    try {
+      await contentRating(data)
+    } catch (err) {
+      console.log('store error contentRating', err)
     } finally {
       context.commit('SET_LOADING', false)
     }

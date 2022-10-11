@@ -3,6 +3,12 @@
     <NuxtLink style="text-decoration: none" to="/">
       <h1 style="margin-left: 20px">⏪</h1>
     </NuxtLink>
+    <div class="contentRating">
+      <button @click="contentRating('safe')">safe</button>
+      <button @click="contentRating('suggestive')">suggestive</button>
+      <button @click="contentRating('erotica')">erotica</button>
+      <button @click="contentRating('pornographic')">pornographic</button>
+    </div>
     <div v-for="tag in tags" :key="tag.id" class="container">
       <div
         v-if="getAllTags?.data?.included_tags.some((e) => e.id === tag.id)"
@@ -70,7 +76,12 @@ export default {
     })
   },
   methods: {
-    ...mapActions('notes', ['includedTags', 'excludedTags', 'getdbTags']),
+    ...mapActions('notes', [
+      'includedTags',
+      'excludedTags',
+      'getdbTags',
+      'contentRating',
+    ]),
     async excludedTag(Name, Id) {
       this.includedTagsList.push({ name: Name, id: Id })
       try {
