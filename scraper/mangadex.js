@@ -31,14 +31,15 @@ export async function searchMangadex(page) {
 
   const contentRating = tags.data.content_rating
 
-  pageUrl = `https://api.mangadex.org/manga?order[rating]=desc&limit=1&offset=${page}${
-    (includedTags, excludedTags)
-  }&contentRating[]=${contentRating}`
+  pageUrl = `https://api.mangadex.org/manga?order[rating]=desc&limit=20&offset=${
+    page * 20
+  }${(includedTags, excludedTags)}&contentRating[]=${contentRating}`
   // mangadex excludetags
 
   const pageReq = await fetch('/api/' + pageUrl)
   const data = await pageReq.json()
-  return data.data[0].id
+  // return data.data[0].id
+  return data.data
 }
 
 export async function scrapeMangadex(slug, chapterId) {

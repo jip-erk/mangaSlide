@@ -79,6 +79,7 @@ export default {
       chapterLength: 0,
       page: 0,
       localMangaList: [],
+      queue: [],
     }
   },
   computed: {
@@ -94,7 +95,8 @@ export default {
     this.getMangas().then(() => {
       const data = { ...this.getMangaList.data }
       for (const item in data) {
-        this.localMangaList.push(data[item].data)
+        // console.log(data[item].data.slug)
+        this.localMangaList.push(data[item].data.slug)
       }
       this.updatePage()
     })
@@ -112,31 +114,35 @@ export default {
       this.updateManga(this.constant)
     },
     setPage() {
-      this.page++
+      // this.page++
+
+      this.queue.shift()
       this.updatePage()
       // this.setCurrentPage(this.page).then(() => {
       //   this.updatePage()
       // })
     },
-    updatePage() {
+    async updatePage() {
+      console.log(this.page)
       // this.getCurrentPage().then(() => {
       //   this.page = this.getPage.data.currentPage
-      searchMangadex(this.page).then((res) => {
-        scrapeMangadex(res).then(async (res) => {
-          // if localMangaList contains object with data.slug same as res.cosntant.slug
-          // then set constant to null
-
-          for (const item in this.localMangaList) {
-            if (this.localMangaList[item].slug === (await res.constant.slug)) {
-              this.constant = null
-              console.log('slug already exists')
-              this.setPage()
-            } else {
-              this.constant = res.constant
-              this.chapterLength = res.data.allChapters.length
+      if (this.queue.length < 5) {
+        await searchMangadex(this.page).then((res) => {
+          for (const i in res) {
+            if (!this.localMangaList.includes(res[i].id)) {
+              this.queue.push(res[i].id)
             }
           }
+          if (this.queue.length === 0) {
+            this.page++
+            this.updatePage()
+          }
         })
+      }
+      if (this.queue.length === 0) return
+      scrapeMangadex(this.queue[0]).then((res) => {
+        this.constant = res.constant
+        this.chapterLength = res.data.allChapters.length
       })
       // })
     },
@@ -149,8 +155,9 @@ export default {
         chapters: this.chapterLength,
         progress: [],
       }
+
       // add data to this.localMangaList
-      this.localMangaList.push(data)
+      this.localMangaList.push(data.slug)
       this.createManga(data)
     },
   },
