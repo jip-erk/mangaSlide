@@ -32,6 +32,7 @@
             }
           "
         >
+        
           <img :src="manga.data.posterUrl" alt="posterImg" />
           <span>{{ manga.data.name }}</span>
           <span>{{ manga.data.chapters }}</span>

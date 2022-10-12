@@ -93,7 +93,8 @@ export default {
     console.log('mounted')
 
     this.getMangas().then(() => {
-      const data = { ...this.getMangaList.data }
+      const data = this.getMangaList.data 
+      console.log(data.length)
       for (const item in data) {
         // console.log(data[item].data.slug)
         this.localMangaList.push(data[item].data.slug)
@@ -126,7 +127,7 @@ export default {
       console.log(this.page)
       // this.getCurrentPage().then(() => {
       //   this.page = this.getPage.data.currentPage
-      if (this.queue.length < 5) {
+      if (this.queue.length === 0) {
         await searchMangadex(this.page).then((res) => {
           for (const i in res) {
             if (!this.localMangaList.includes(res[i].id)) {

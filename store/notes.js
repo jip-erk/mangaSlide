@@ -120,6 +120,7 @@ export const actions = {
   async getMangas(context) {
     context.commit('SET_LOADING', true)
     try {
+      console.log('store getMangas')
       const mangas = await getMangas()
       context.commit('getMangas', mangas)
     } catch (err) {

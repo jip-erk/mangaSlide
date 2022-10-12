@@ -55,7 +55,7 @@ export const updateManga = async (Slug, Status, Id) => {
         },
       })
     )
-
+   
     return updateManga
   } catch (err) {
     console.log(err)
@@ -136,10 +136,11 @@ export const getMangas = async () => {
   try {
     const getMangas = await client.query(
       q.Map(
-        q.Paginate(q.Documents(q.Collection('mangas'))),
-        q.Lambda('X', q.Get(q.Var('X')))
+        q.Paginate(q.Documents(q.Collection('mangas')), { size: 1000 }),
+          q.Lambda('X', q.Get(q.Var('X')))
       )
     )
+
     return getMangas
   } catch (err) {
     console.log(err)
