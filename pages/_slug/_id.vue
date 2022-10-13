@@ -183,6 +183,7 @@ export default {
   button {
     background-color: #6d7179;
     border: none;
+    padding: 5px;
     color: white;
     font-size: 1.5rem;
     cursor: pointer;
