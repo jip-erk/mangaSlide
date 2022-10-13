@@ -8,8 +8,8 @@ app.get('/', (req, res) => {
     'content-type',
     `image/${url.includes('.png') ? 'png' : 'jpg'}` // Oh well
   )
-  fetch(url).then(async (response) => {
-    await response.body.pipe(res)
+  fetch(url).then((response) => {
+    response.body.pipe(res)
   })
 })
 

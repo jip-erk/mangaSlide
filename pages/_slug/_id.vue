@@ -9,7 +9,9 @@
       <Transition>
         <span v-if="!fullMenu">
           {{
-            `${currentImage} of ${chapterImages.length} - S${currentChapter.attributes.volume} Ch ${currentChapter.attributes.chapter}`
+            `${currentImage} of ${chapterImages.length} - S${
+              currentChapter.attributes.volume || 0
+            } Ch ${currentChapter.attributes.chapter || 0}`
           }}
         </span>
         <div v-else>
@@ -29,10 +31,13 @@
           {{ Math.round((chapterLoaded / chapterImages.length) * 100) }} %
         </div>
       </div>
-      <div v-for="img in chapterImages" :key="img" class="img-cont">
+      <div class="img-cont">
         <img
+          v-for="img in chapterImages"
+          :key="img"
           :src="'/proxy-image?url=' + img"
           alt="chapterImage"
+          rel="preload"
           @load="loaded()"
         />
       </div>
@@ -40,7 +45,7 @@
         <NuxtLink v-if="prevChapterId" :to="prevChapterId">
           <button>prev</button>
         </NuxtLink>
-        <NuxtLink v-if="nextChapterId" :to="nextChapterId">
+        <NuxtLink v-if="nextChapterId" :prefetch="true" :to="nextChapterId">
           <button>next</button>
         </NuxtLink>
       </div>
@@ -57,7 +62,7 @@ export default {
       slug: this.$route.params.slug,
       id: this.$route.params.id,
       chapterImages: [],
-      imgLoaded: false,
+      imgLoaded: true,
       chapterLoaded: 0,
       prevChapterId: '',
       nextChapterId: '',
@@ -67,15 +72,10 @@ export default {
       fullMenu: false,
     }
   },
-  mounted() {
-    const data = {
-      slug: this.slug,
-      currentChapter: this.id,
-    }
-    this.updateCurrentChapter(data)
+  beforeMount() {
     scrapeMangadex(this.slug, this.id).then((res) => {
       this.chapterImages = res.data.chapterImages
-
+      // this.preloadImages(res.data.chapterImages)
       const sort = res.data.allChapters.sort((a, b) => {
         return a.attributes.chapter - b.attributes.chapter
       })
@@ -93,13 +93,38 @@ export default {
       }
     })
   },
+  mounted() {
+    // const data = {
+    //   slug: this.slug,
+    //   currentChapter: this.id,
+    // }
+    // this.updateCurrentChapter(data)
+  },
   methods: {
     ...mapActions('notes', ['updateCurrentChapter']),
     loaded() {
-      this.chapterLoaded++
-      if (this.chapterLoaded === this.chapterImages.length) {
-        this.imgLoaded = true
+      // this.chapterLoaded++
+      // if (this.chapterLoaded === this.chapterImages.length) {
+      //   this.imgLoaded = true
+      // }
+    },
+    async preloadImages(res) {
+      // preload images and after each image is loaded, push it to the array in async await
+      console.time('preload')
+      for (let i = 0; i < res.length; i++) {
+        const img = await this.preload(res[i])
+        this.chapterImages.push(img)
       }
+      console.timeEnd('preload')
+
+      this.imgLoaded = true
+    },
+    preload(url) {
+      return new Promise((resolve, reject) => {
+        const img = new Image()
+        img.onload = () => (img.src = url)
+        img.onerror = reject
+      })
     },
   },
 }
@@ -176,6 +201,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
   img {
     width: 100%;
   }
