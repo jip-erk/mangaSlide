@@ -2,6 +2,16 @@
   <div v-if="constant" class="column">
     <div v-if="loading" class="loader">loading</div>
     <div class="nav">
+      <a
+        @click="
+          () => {
+            page = 0
+            queue = []
+            setPage()
+          }
+        "
+        >🔃</a
+      >
       <NuxtLink to="/mangalist">📋</NuxtLink>
       <NuxtLink to="/mangatags">🏷️</NuxtLink>
     </div>
@@ -91,10 +101,13 @@ export default {
   },
   mounted() {
     console.log('mounted')
+    this.getCurrentPage().then(() => {
+      this.page = this.getPage.data.currentPage
+    })
 
     this.getMangas().then(() => {
-      const data = this.getMangaList.data 
-      console.log(data.length)
+      const data = this.getMangaList.data
+
       for (const item in data) {
         // console.log(data[item].data.slug)
         this.localMangaList.push(data[item].data.slug)
@@ -111,6 +124,7 @@ export default {
       'getMangas',
       'checkIfMangaExists',
     ]),
+
     updateTest() {
       this.updateManga(this.constant)
     },
@@ -118,10 +132,9 @@ export default {
       // this.page++
 
       this.queue.shift()
+      console.log(this.queue)
+      // this.updatePage()
       this.updatePage()
-      // this.setCurrentPage(this.page).then(() => {
-      //   this.updatePage()
-      // })
     },
     async updatePage() {
       console.log(this.page)
@@ -141,6 +154,9 @@ export default {
         })
       }
       if (this.queue.length === 0) return
+      console.log('testing', this.page)
+      this.setCurrentPage(this.page)
+
       scrapeMangadex(this.queue[0]).then((res) => {
         this.constant = res.constant
         this.chapterLength = res.data.allChapters.length

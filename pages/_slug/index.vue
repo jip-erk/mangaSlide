@@ -9,7 +9,7 @@
       class="chapterList"
       @click="
         () => {
-          $router.push({ path: id + '/' + chapter.id })
+          $router.push({ path: id + '/reader', query: { id: chapter.id } })
         }
       "
     >
